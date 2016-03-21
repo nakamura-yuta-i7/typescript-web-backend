@@ -1,3 +1,6 @@
+declare var require;
+declare var process;
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,8 +8,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+import routes from './routes/index';
+import users from './routes/users';
 
 var app = express();
 
@@ -31,7 +34,7 @@ app.use('/users', users);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
-  err.status = 404;
+  err["status"] = 404;
   next(err);
 });
 

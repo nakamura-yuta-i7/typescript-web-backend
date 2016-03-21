@@ -6,32 +6,33 @@ var uglifyJsPlugin = webpack.optimize.UglifyJsPlugin
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = [
-  
-  // ===========================================
-  // backend webpack config (for nodejs server)
-  // ===========================================
-
-  {
-    name: "backend",
-    context: __dirname + "/src/backend",
-    entry: {
-      server: './server.js',
-      // バッチ作るならこんな感じ？
-      // 'batch.basic': './batch/basic.js',
-    },
-    target: 'node',
-    output: {
-      path: __dirname + "/backend/dist",
-      filename: '[name].js'
-    },
-    externals: getNodeModules(),
-    devtool: 'sourcemap'
-  },
-  
-	// =======================================
-	// client side javascript webpack config
-	// =======================================
-	
+	{
+		name: "backend",
+		context: __dirname + "/src/backend",
+		entry: {
+			server: './server.ts',
+			// バッチ作るならこんな感じ？
+			// 'batch.basic': './batch/basic.js',
+		},
+		target: 'node',
+		output: {
+			path: __dirname + "/backend/dist",
+			filename: '[name].js'
+		},
+		resolve: {
+			extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js', 'es6']
+		},
+		module: {
+			loaders: [
+				{ test: /\.tsx?$/,
+					loader: 'babel-loader?presets[]=es2015!ts-loader' },
+				{ test: /\.jsx?$/,
+					loader: 'babel-loader?presets[]=es2015' },
+			]
+		},
+		externals: getNodeModules(),
+		devtool: 'sourcemap'
+	},
 	{
 		name: "web",
 		// entry内で定義したentoryポイントとなる各.jsファイルの保存パス
@@ -74,10 +75,6 @@ module.exports = [
 			var precss       = require('precss');
 			return [autoprefixer, precss];
 		},
-		// // tsキーの有無で挙動がどうなるか未検証
-		// ts: {
-		// 	compiler: 'ntypescript'
-		// },
 		plugins: [
 			// entryで設定された各生成後のファイルで共通化できるコードはこのファイルにまとめて外出しできる
 			// なので必ずhtml側では init.js は常に script src="init.js" で読み込むこと

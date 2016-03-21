@@ -7,7 +7,8 @@ import * as _ from "lodash"
 
 global.$ = $
 global.co = require("co")
-global.Promise = Promise
+global._ = _
+// global.Promise = Promise
 
 import Header from "./header"
 require("./main.css")
