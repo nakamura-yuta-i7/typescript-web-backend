@@ -1,0 +1,7 @@
+node_modules/
+.trashbox
+public/dist/
+backend/dist/
+passwords.yaml
+npm-debug.log
+
