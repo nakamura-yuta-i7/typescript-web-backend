@@ -3,3 +3,6 @@ html, body {
   margin: 0;
   box-sizing: border-box;
 }
+* {
+  font-family: "Apple TP","Hiragino Kaku Gothic Pro","ヒラギノ角ゴ Pro W3","メイリオ","Meiryo","ＭＳ Ｐゴシック","Helvetica Neue","Helvetica","Arial",sans-serif !important;
+}

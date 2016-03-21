@@ -88,14 +88,11 @@ module.exports = [
 			// 	}
 			// }),
 		],
-		// 指定のモジュールを予めグローバル変数にできるらしい
-		// ここの使い方はまだよくわかっていない
+		// 指定のモジュールを予めグローバル変数にする
 		// 参考URL: http://qiita.com/shn/items/7bd544a39ee7ac858669
-		// html側で CDN などでライブラリを読み込むならここでの指定は不要という程度の理解
+		// html側で CDN 等ライブラリを読み込むならここでの指定は不要となる
 		externals: {
-			// 'React': 'React',
-			// 'ReactDOM': 'ReactDOM',
-			// 'jquery': '$',
+			'jquery': '$',
 		},
 		devtool: 'sourcemap'
 	},

@@ -1,5 +1,9 @@
 declare var require;
+declare var global;
 declare var process;
+
+import * as AppDb from "./db/default/connection";
+global.AppDb = AppDb;
 
 var express = require('express');
 var path = require('path');
@@ -7,9 +11,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-import routes from './routes/index';
-import users from './routes/users';
 
 var app = express();
 
@@ -20,16 +21,54 @@ var APP_ROOT = config.APP.ROOT.DIR.PATH
 app.set('views', APP_ROOT + '/src/backend/views' );
 app.set('view engine', 'jade');
 
+console.log( "__dirname", __dirname );
+
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static( APP_ROOT +  '/public' ))
 
+(function() {
+  // 認証周りの設定
+  var session = require('express-session')
+  var SQLiteStore = require('connect-sqlite3')(session);
+  var maxAge = new Date(Date.now() + 1000 * 60 * 60)
+  console.log( "cookie maxAge:", maxAge )
+  app.use(session({
+    store: new SQLiteStore,
+    resave: false,
+    saveUninitialized: false,
+    genid: function(req) {
+      var uuid = require('uuid')
+      return uuid.v4()
+    },
+    cookie: {
+      httpOnly: false,
+      maxAge: maxAge
+    },
+    secret: 'keyboard cat'
+  }))
+  var passport = require("passport")
+  app.use(passport.initialize());
+  app.use(passport.session());
+  passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
+})()
+
+
+app.use(express.static( APP_ROOT +  '/public' ))
+import routes from './routes/index';
+import users from './routes/users';
 app.use('/', routes);
 app.use('/users', users);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

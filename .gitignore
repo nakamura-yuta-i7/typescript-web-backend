@@ -4,4 +4,4 @@ public/dist/
 backend/dist/
 passwords.yaml
 npm-debug.log
-
+sessions.db
